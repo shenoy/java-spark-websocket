@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Echo View</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<h1>Echo View Example</h1>
+
+<script>
+    var ws = new WebSocket("ws://localhost:4567/websocket/echo");
+
+    ws.onmessage = function (event) {
+        console.log(event);
+        $("<li>" + event.data + "</li>").appendTo($("#websocketMessages"));
+    }
+    ws.onopen = function (event) {
+        console.log(event);
+    }
+
+    ws.onclose = function (event) {
+        console.log(event);
+    }
+
+    $(function(){
+        $("#testForm").on("submit", function(e){
+            e.preventDefault();
+            var value=$("#inputText").val();
+            ws.send(value);
+            $("#inputText").val("");
+
+        });
+    });
+
+</script>
+<form id= "testForm" >
+    <input id="inputText" type="text" value="">
+</form>
+<div id="websocketMessages">Messages</div>
+</body>
+</html>
